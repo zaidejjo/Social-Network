@@ -1,0 +1,49 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block content %}
+    <h2>Following</h2>
+    {% if posts %}
+    {% for post in posts %}
+    <div class="card mb-3" data-post-id="{{post.id}}">
+        <div class="card-body">
+            <h5>
+                <a href="{%url 'profile' post.user.username%}">@{{post.user.username}}</a>
+            </h5>
+
+            <p class="post-content">{{post.content}}</p>
+            <small class="text-muted">{{post.timestamp}}</small>
+
+            <div class="mt-2 d-flex align-items-center gap-3">
+                {% if user == post.user %}
+                    <button class="btn btn-sm btn-outline-secondary edit-btn">Edit</button>
+                    <button class="btn btn-sm btn-primary save-btn d-none">Save</button>
+                    <button class="btn btn-sm btn-light cancel-btn d-none">Cancel</button>
+                {% endif %}
+
+                <button class="btn btn-sn btn-outline-danger like_btn">Like</button>
+                <span class="like-count">{{post.likes.count}}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <nav>
+        <ul class="pagination">
+            {% if posts.has_previous %}
+                <li class="page-item">
+                    <a href="?page={{posts.previous_page_number}}" class="page-link">Previous</a>
+                </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <a class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</a>
+            </li>
+            { %if posts.has_next %}
+                <li class="page-item disabled">
+                    <a href="?page={{posts.next_page_number}}" class="page-link">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+        <p>There no posts available from your following list.</p>

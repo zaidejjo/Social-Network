@@ -1,0 +1,57 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block content %}
+<h2>All Posts</h2>
+{% if user.is_authenticated %}
+        <div style="border: 1px solid #ccc; padding: 15px; margin-top: 40px; border-radius: 5px; background-color: #f9f9f9; width: 80%;">
+            <h4>New Post</h4>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.content }}
+                <button type="submit" style="margin-top: 10px; margin-right: 20px;" class="btn btn-primary ms-2">Post</button>
+            </form>
+        </div>
+        {% endif %}
+
+<hr>
+{% for post in posts %}
+<div class="card mb-3" data-post-id="{{ post.id }}">
+    <div class="card-body">
+        <h5>
+            <a class="link-black" href="{% url 'profile' post.user.username %}">
+                <h4><strong>{{ post.user.username }}</strong></h4>
+            </a>
+        </h5>
+
+        {% if user.id == post.user.id %}
+        <div class="mt-2">
+            <button class="edit-btn btn btn-secondary btn-sm">Edit</button>
+            <button class="save-btn btn btn-success w-100 mb-1 d-none">Save</button>
+            <button class="cancel-btn btn btn-warning w-100 d-none">Cancel</button>
+        </div>
+        {% endif %}
+
+        <p class="post-content">{{ post.content }}</p>
+        <small class="text-muted">{{ post.timestamp }}</small>
+
+        <div class="like-container d-flex align-items-center mt-2" data-post-id="{{ post.id }}">
+    <span class="like-heart {% if post.id in liked_post_ids %}liked{% endif %}" style="font-size:2.5rem; cursor:pointer; user-select:none;">
+        {% if post.id in liked_post_ids %}♡{% else %}♡{% endif %}
+    </span>
+    <span class="like-count ms-2" style="font-size:1.2rem; user-select:none; margin-left: 8px;">
+        {{ post.likes.count }}
+    </span>
+</div>
+
+        <div class="mt-2">
+            <button class="comment-btn btn btn-outline-primary btn-sm">Comment</button>
+        </div>
+    </div>
+</div>
+{% empty %}
+<p>No posts available.</p>
+{% endfor %}
+
+<script src="{% static 'network/scripts.js' %}"></script>
+{% endblock %}

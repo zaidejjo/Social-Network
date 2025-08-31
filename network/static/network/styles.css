@@ -1,0 +1,15 @@
+.like-heart {
+    color: black;
+    transition: transform 0.2s, color 0.2s;
+    display: inline-block;
+    user-select: none; /* يمنع النسخ */
+}
+
+.like-heart:hover {
+    transform: scale(1.3); /* تكبير عند المرور */
+}
+
+.like-heart.liked {
+    color: red; /* قلب أحمر ممتلئ */
+    transform: scale(1.4); /* تكبير عند الضغط */
+}
